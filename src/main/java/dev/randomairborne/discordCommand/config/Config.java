@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.*;
-import java.util.Arrays;
+import java.util.List;
 
 public class Config {
     public static Settings getConfig() throws IOException {
@@ -19,28 +19,20 @@ public class Config {
             settings = gson.fromJson(new FileReader(configFilePath), Settings.class);
         } catch (java.io.FileNotFoundException exception) {
             // if the file doesn't exist we use the default and write it to the file
-            Settings defaultSettings = new Settings();
-            defaultSettings.message = "Click here to join our discord server!";
-            defaultSettings.discord_link = "https://discord.gg/minecraft";
+            CommandSettings defaultSettings = new CommandSettings();
+            defaultSettings.message = "Please click here for help configuring this mod.";
+            defaultSettings.link = "https://github.com/randomairborne/slashdiscord#readme";
             defaultSettings.color = "GOLD";
-            defaultSettings.names = Arrays.asList("discord");
-            BufferedWriter writer = new BufferedWriter(new FileWriter(configFilePath));
-            writer.write(gson.toJson(defaultSettings));
-            writer.close();
-            return defaultSettings;
+            defaultSettings.names = List.of("discord", "setup", "discordsetup");
+            Settings finalDefaultSettings = new Settings();
+            finalDefaultSettings.commands = List.of(defaultSettings);
+            return finalDefaultSettings;
         }
-        // if only some parts are filled then we use the defaults for the missing parts
-        if (settings.message == null) {
-            settings.message = "Click here to join our discord server!";
-        }
-        if (settings.discord_link == null) {
-            settings.discord_link = "https://discord.gg/minecraft";
-        }
-        if (settings.color == null) {
-            settings.color = "GOLD";
-        }
-        if (settings.names == null) {
-            settings.names = Arrays.asList("discord");
+        for (CommandSettings cmdSettings : settings.commands) {
+            assert cmdSettings.color != null;
+            assert cmdSettings.link != null;
+            assert cmdSettings.message != null;
+            assert cmdSettings.names != null;
         }
         return settings;
     }
