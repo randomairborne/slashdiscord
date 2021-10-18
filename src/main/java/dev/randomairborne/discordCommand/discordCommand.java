@@ -1,17 +1,18 @@
 package dev.randomairborne.discordCommand;
+
 // too many imports
+
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import dev.randomairborne.discordCommand.config.*;
 
-import java.io.*;
-import java.nio.file.Path;
+import java.io.IOException;
 
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -23,37 +24,22 @@ public class discordCommand implements ModInitializer {
     public void onInitialize() {
         LOGGER.info("Loading /discord");
         // get the path and output an error if we can't read or create the file
-        Path serverPath = FabricLoader.getInstance().getGameDir();
-        Path configPath = serverPath.resolve("config/discordlink.txt");
-        FileReader fr = null;
+        Settings config = null;
         try {
-            fr = new FileReader(configPath.toString());
-        } catch (FileNotFoundException efnf) {
-            try (FileOutputStream stream = new FileOutputStream(configPath.toString())) {
-                byte[] data = "https://discord.gg/minecraft".getBytes();
-                stream.write(data);
-            } catch (IOException e) {
-                LOGGER.error("Could not load or create config file!");
-                return;
-            }
-        }
-        assert fr != null;
-        BufferedReader br = new BufferedReader(fr);
-        String link;
-        try {
-            link = br.readLine();
+            config = Config.getConfig();
         } catch (IOException e) {
-            LOGGER.error("Could not read file for link..");
-            return;
+            LOGGER.error("A read/write error occured, " + e);
         }
-        String finalLink = link;
+
         // tell Brigadier that we want this command to send back some text
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-            dispatcher.register(literal("discord").executes(context -> {
-                context.getSource().getPlayer().sendSystemMessage(new LiteralText("Click here to join our discord!").formatted(Formatting.UNDERLINE, Formatting.GOLD).styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, finalLink))), Util.NIL_UUID);
+        Settings finalConfig = config;
+        assert finalConfig != null;
+        for (String name : finalConfig.names) {
+            CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> dispatcher.register(literal(name).executes(context -> {
+                context.getSource().getPlayer().sendSystemMessage(new LiteralText(finalConfig.message).formatted(Formatting.UNDERLINE, Formatting.valueOf(finalConfig.color)).styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, finalConfig.discord_link))), Util.NIL_UUID);
                 return 1;
-            }));
-        });
+            })));
+        }
         LOGGER.info("Loaded /discord");
     }
 
