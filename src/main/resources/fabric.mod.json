@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "discord_command",
+  "version": "${version}",
+
+  "name": "slash discord",
+  "description": "adds /discord to your Minecraft server",
+  "authors": [
+    "valkyrie_pilot"
+  ],
+  "contact": {
+    "homepage": "https://randomairborne.dev/",
+    "sources": "https://github.com/randomairborne/slash-discord"
+  },
+
+  "license": "CC0-1.0",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.randomairborne.discordCommand.discordCommand"
+    ]
+  },
+
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": "*",
+    "minecraft": "1.17.x",
+    "java": ">=16"
+  }
+}
