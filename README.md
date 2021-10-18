@@ -1,5 +1,7 @@
 # /discord
 
+#### A basic mod which adheres to the "Do one thing well" philosophy.
+
 ## Setup
 
 1. Download the mod from the Releases section in the sidebar, then put it in your server's `mods` folder.
