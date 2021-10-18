@@ -13,7 +13,7 @@
     "sources": "https://github.com/randomairborne/slash-discord"
   },
 
-  "license": "CC0-1.0",
+  "license": "MIT",
 
   "environment": "server",
   "entrypoints": {
