@@ -42,6 +42,8 @@
 
 (This mod does require the [Fabric API](https://modrinth.com/mod/fabric-api), but you probably have that already)
 
+## Getting Help
+Please ask in my [Discord](https://discord.gg/88b8kzNJg6) for support and help.
 ## License
 
 This mod is available under the MIT licence.
