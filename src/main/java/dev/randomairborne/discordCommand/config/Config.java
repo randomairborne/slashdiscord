@@ -1,38 +1,41 @@
 package dev.randomairborne.discordCommand.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
+import dev.randomairborne.discordCommand.discordCommand;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.*;
-import java.util.List;
 
 public class Config {
-    public static Settings getConfig() throws IOException {
+    public static Settings getConfig() throws IOException, MissingFieldException {
         String configFilePath = FabricLoader.getInstance().getGameDir().resolve("config/slashdiscord.json").toString();
         // set up gson
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
-        Settings settings;
+        Settings settings = new Settings();
         try {
             // attempt to read settings from json into the Settings class
             settings = gson.fromJson(new FileReader(configFilePath), Settings.class);
-        } catch (java.io.FileNotFoundException exception) {
-            // if the file doesn't exist we use the default and write it to the file
-            CommandSettings defaultSettings = new CommandSettings();
-            defaultSettings.message = "Please click here for help configuring this mod.";
-            defaultSettings.link = "https://github.com/randomairborne/slashdiscord#readme";
-            defaultSettings.color = "GOLD";
-            defaultSettings.names = List.of("discord", "setup", "discordsetup");
-            Settings finalDefaultSettings = new Settings();
-            finalDefaultSettings.commands = List.of(defaultSettings);
-            return finalDefaultSettings;
+        } catch (FileNotFoundException exception) {
+            discordCommand.LOGGER.fatal("No configuration file found!");
+        } catch (JsonSyntaxException exception) {
+            discordCommand.LOGGER.fatal("Your JSON has improper syntax!");
+        } catch (JsonParseException exception) {
+            discordCommand.LOGGER.fatal("Error parsing JSON!");
         }
         for (CommandSettings cmdSettings : settings.commands) {
-            assert cmdSettings.color != null;
-            assert cmdSettings.link != null;
-            assert cmdSettings.message != null;
-            assert cmdSettings.names != null;
+            if (cmdSettings.color == null) {
+                throw new MissingFieldException("Color field is missing in one of your JSON entries!");
+            }
+            if (cmdSettings.link == null) {
+                    throw new MissingFieldException("Link field is missing in one of your JSON entries!");
+            }
+            if (cmdSettings.message == null) {
+                    throw new MissingFieldException("Message field is missing in one of your JSON entries!");
+            }
+            if (cmdSettings.names == null) {
+                    throw new MissingFieldException("Names field is missing in one of your JSON entries!");
+            }
         }
         return settings;
     }
