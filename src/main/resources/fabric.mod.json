@@ -3,8 +3,8 @@
   "id": "discord_command",
   "version": "${version}",
 
-  "name": "slash discord",
-  "description": "adds /discord to your Minecraft server",
+  "name": "slashdiscord",
+  "description": "adds custom linked commands to your Minecraft server",
   "authors": [
     "valkyrie_pilot"
   ],
@@ -23,9 +23,8 @@
   },
 
   "depends": {
-    "fabricloader": ">=0.12.2",
-    "fabric": "*",
-    "minecraft": "1.18.x",
+    "fabricloader": ">=0.14.6",
+    "minecraft": "~1.19",
     "java": ">=17"
   }
 }

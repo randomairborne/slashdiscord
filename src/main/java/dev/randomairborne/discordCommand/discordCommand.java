@@ -3,15 +3,18 @@ package dev.randomairborne.discordCommand;
 // too many imports
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.text.ClickEvent;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.mojang.brigadier.context.CommandContext;
+
+import net.minecraft.server.command.ServerCommandSource;
+
 import dev.randomairborne.discordCommand.config.*;
-import org.lwjgl.system.CallbackI;
 
 import java.io.IOException;
 
@@ -25,9 +28,9 @@ public class discordCommand implements ModInitializer {
     public void onInitialize() {
         LOGGER.info("Loading /discord");
         // get the path and output an error if we can't read or create the file
-        Settings fullConfig = new Settings();
+        Settings config = new Settings();
         try {
-            fullConfig = Config.getConfig();
+            config = Config.getConfig();
         } catch (IOException e) {
             LOGGER.error("A read/write error occured, " + e);
         } catch (MissingFieldException e) {
@@ -36,20 +39,28 @@ public class discordCommand implements ModInitializer {
         }
 
         // tell Brigadier that we want this command to send back some text
-        if (fullConfig == null) {
+        if (config == null) {
             LOGGER.error("Config returned NULL");
         }
-        assert fullConfig != null;
-        for (CommandSettings config : fullConfig.commands) {
-            for (String name : config.names) {
-                CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> dispatcher.register(literal(name).executes(context -> {
-                    context.getSource().getPlayer().sendSystemMessage(new LiteralText(config.message).formatted(Formatting.UNDERLINE, Formatting.valueOf(config.color)).styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, config.link))), Util.NIL_UUID);
-                    return 1;
-                })));
+        assert config != null;
+        for (CommandSettings cSettings : config.commands) {
+            for (String name : cSettings.names) {
+                CommandRegistrationCallback.EVENT
+                        .register((dispatcher, dedicated, environment) -> dispatcher
+                                .register(literal(name).executes(context -> sendLinkResponse(context, cSettings))));
             }
         }
         LOGGER.info("Loaded /discord");
     }
 
+    public static Integer sendLinkResponse(CommandContext<ServerCommandSource> context, CommandSettings cSettings) {
+        context.getSource().getPlayer().sendMessage(
+                Text.literal(cSettings.message)
+                        .formatted(Formatting.UNDERLINE, Formatting.valueOf(cSettings.color))
+                        .styled(style -> style.withClickEvent(
+                                new ClickEvent(ClickEvent.Action.OPEN_URL, cSettings.link))),
+                false);
+        return 1;
+    }
 
 }
