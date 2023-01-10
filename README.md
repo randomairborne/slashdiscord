@@ -4,7 +4,7 @@
 
 ## Setup
 
-1. Download the mod from the Releases section in the sidebar, then put it in your server's `mods` folder.
+1. Download the mod from the [modrinth](https://modrinth.com/mod/slashdiscord), then put it in your server's `mods` folder.
 2. Create `server/config/slashdiscord.json` and insert into it your config. The config should be valid json and look
    somewhat like this:
 
