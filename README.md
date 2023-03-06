@@ -12,33 +12,32 @@
 {
   "commands": [
     {
-      "link": "https://discord.gg/minecraft",
-      "message": "Click here to join our discord server!",
-      "color": "GOLD",
-      "names": [
-        "discord"
-      ]
-    },
-    {
-      "link": "https://example.com",
-      "message": "Click here to visit our website!",
+      "target": "https://github.com/randomairborne/slashdiscord/blob/master/README.md",
+      "message": "Click to configure slashdiscord!",
       "color": "AQUA",
       "names": [
-        "store",
-        "website"
-      ]
+        "discord",
+        "setup"
+      ],
+      "on_click": "OPEN_URL"
+    },
+    {
+      "target": "-7115307996784423713",
+      "message": "Click to copy world seed!",
+      "color": "GREEN",
+      "hover": {
+        "message": "Click to copy",
+        "color": "GOLD"
+      },
+      "names": [
+        "worldseed"
+      ],
+      "on_click": "COPY_TO_CLIPBOARD"
     }
   ]
 }
 
 ```
-`commands` should be a list of JSON objects of the below format
-
-`discord_link` should be a permanent invite link to your server <br>
-`message` should be the message you want to appear when the command is run <br>
-`color` should be a [minecraft color code](https://minecraft.fandom.com/wiki/Formatting_codes#Color_codes) <br>
-`names` should be a list of names you want the command to have
-
 3. There is no third step
 
 ## Getting Help

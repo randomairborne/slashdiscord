@@ -27,6 +27,7 @@ public class Config {
             CommandSettings copyToClipboard = new CommandSettings("Click to copy world seed!",
                     "-7115307996784423713", Formatting.GREEN,
                     Action.COPY_TO_CLIPBOARD, new String[] { "worldseed" });
+            copyToClipboard.hoverText = new HoverText("Click to copy", Formatting.GOLD);
             Files.createDirectories(FabricLoader.getInstance().getGameDir().resolve("config"));
             configFilePath.toFile().createNewFile();
             FileWriter newConfigurationFile = new FileWriter(configFilePath.toString());
