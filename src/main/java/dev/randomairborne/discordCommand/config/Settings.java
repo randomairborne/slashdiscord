@@ -1,8 +1,12 @@
 package dev.randomairborne.discordCommand.config;
 
-import java.util.List;
-
 public class Settings {
-    public List<CommandSettings> commands;
+    public CommandSettings[] commands;
+    public Settings(CommandSettings[] commands) {
+        this.commands = commands;
+    }
+    public Settings() {
+        this.commands = new CommandSettings[] {};
+    }
 }
 
