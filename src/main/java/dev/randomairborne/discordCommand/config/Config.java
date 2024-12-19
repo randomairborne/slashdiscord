@@ -22,7 +22,7 @@ public class Config {
         } catch (FileNotFoundException exception) {
             discordCommand.LOGGER.info("No configuration file found, creating empty one!");
             CommandSettings setUp = new CommandSettings("Click to configure slashdiscord!",
-                    "https://github.com/randomairborne/slashdiscord/blob/master/README.md", Formatting.AQUA,
+                    "https://github.com/randomairborne/slashdiscord/blob/main/README.md", Formatting.AQUA,
                     Action.OPEN_URL, new String[] { "discord", "setup" });
             CommandSettings copyToClipboard = new CommandSettings("Click to copy world seed!",
                     "-7115307996784423713", Formatting.GREEN,
